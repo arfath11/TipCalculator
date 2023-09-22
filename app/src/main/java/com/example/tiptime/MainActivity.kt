@@ -64,6 +64,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipTimeLayout() {
+
+
+    var amountInput by remember { mutableStateOf("") }
+
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
+
+
     Log.i("mycheck","reexecuted tiptimelayout") // Debug
     Column(
         modifier = Modifier.padding(30.dp),
@@ -76,20 +84,27 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp)
                 .align(alignment = Alignment.Start)
         )
+
+        EditNumberField( value = amountInput,
+            onValueChange = { amountInput = it },
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth())
+
+        Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = stringResource(R.string.tip_amount, "$0.00"),
+            text = stringResource(R.string.tip_amount, tip),
             style = MaterialTheme.typography.displaySmall
         )
-        EditNumberField(modifier = Modifier
-            .padding(bottom = 32.dp)
-            .fillMaxWidth())
-
-        Spacer(modifier = Modifier.height(150.dp))
     }
 }
 @Composable
-fun EditNumberField(modifier: Modifier = Modifier) {
-    var amountInput by remember { mutableStateOf("")  }
+fun EditNumberField(   value: String,
+                       onValueChange: (String) -> Unit,
+                       modifier: Modifier = Modifier) {
+
+
+
     Log.i("mycheck","reexecuted editnumber filed modified") // Debug
 
 
@@ -99,8 +114,8 @@ fun EditNumberField(modifier: Modifier = Modifier) {
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // this shows only number on ur keyboard
 
-        value = amountInput,
-        onValueChange= { amountInput = it }
+        value = value,
+        onValueChange= onValueChange
     )
 
 
